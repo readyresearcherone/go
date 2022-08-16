@@ -60,11 +60,72 @@ window.addEventListener('mousemove', function (e) {
             const highlightPos = new THREE.Vector3().copy(intersect.point).floor().addScalar(0.5);
             highlight.position.set(highlightPos.x, 0, highlightPos.z);
 
+            const objectExists = objects.find(function(object) {
+                return(object.position.x === highlight.position.x) && 
+                (object.position.z === highlight.position.z)
+        
+            });
+
+            if(!objectExists)
+            highlight.material.color.setHex(0xFFFFFF);
+            else
+            highlight.material.color.setHex(0xFF0000);
+
         }
 
 
     });
 });
+
+const goPiece = new THREE.Mesh( 
+    new THREE.SphereGeometry(0.3, 10, 10),
+    new THREE.MeshBasicMaterial({
+        color: 0xFFFFFF
+    })
+
+);
+
+
+const goPieceB = new THREE.Mesh( 
+    new THREE.SphereGeometry(0.3, 10, 10),
+    new THREE.MeshBasicMaterial({
+        color: 0x000000
+    })
+
+);
+
+
+
+const objects =[];
+const player = 0;
+
+window.addEventListener('mousedown', function() {
+
+    
+
+    const objectExists = objects.find(function(object) {
+        return(object.position.x === highlight.position.x) && 
+        (object.position.z === highlight.position.z)
+
+    });
+
+    if (!objectExists) {
+
+    intersects.forEach(function (intersect) {
+
+        if (intersect.object.name === "board") {
+            const goPieceCopy = goPiece.clone();
+            goPieceCopy.position.copy(highlight.position);
+            scene.add(goPieceCopy);
+            objects.push(goPieceCopy);
+            highlight.material.color.setHex(0xFF0000);
+        }
+
+
+    });
+}
+});
+
 
 
 

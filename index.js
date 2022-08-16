@@ -41,7 +41,7 @@ scene.add(highlight);
 
 
 
-const grid = new THREE.GridHelper(19, 19)
+const grid = new THREE.GridHelper(20,20)
 scene.add(grid);
 
 
@@ -57,7 +57,7 @@ window.addEventListener('mousemove', function (e) {
     intersects.forEach(function (intersect) {
 
         if (intersect.object.name === "board") {
-            const highlightPos = new THREE.Vector3().copy(intersect.point).floor();
+            const highlightPos = new THREE.Vector3().copy(intersect.point).floor().addScalar(0.5);
             highlight.position.set(highlightPos.x, 0, highlightPos.z);
 
         }

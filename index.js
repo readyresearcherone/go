@@ -7,25 +7,29 @@ document.body.appendChild(renderer.domElement);
 
 const scene = new THREE.Scene();
 
-const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+const camera = new THREE.PerspectiveCamera(55, window.innerWidth / window.innerHeight, 0.1, 1000);
 
 const orbit = new OrbitControls(camera, renderer.domElement);
+orbit.enableZoom = false;
+orbit.maxPolarAngle = Math.PI / 2.3;
 camera.position.set(10, 15, -22);
 
 orbit.update();
 
 const goBoard = new THREE.Mesh(
-    new THREE.PlaneGeometry(20, 20),
+    new THREE.PlaneGeometry(20.1, 20.1),
     new THREE.MeshBasicMaterial({
         color: 0xaf6c26,
         side: THREE.DoubleSide,
         transparent: true,
         opacity: 0.5
 
-    })
+    }),
+    
 )
 
 goBoard.rotateX(Math.PI / 2);
+goBoard.position.set(0, 0, 0)
 scene.add(goBoard);
 goBoard.name = 'board'
 
@@ -44,7 +48,7 @@ scene.add(highlight);
 
 
 
-const grid = new THREE.GridHelper(20, 20)
+const grid = new THREE.GridHelper(19, 19)
 scene.add(grid);
 
 
@@ -60,7 +64,7 @@ window.addEventListener('mousemove', function (e) {
     intersects.forEach(function (intersect) {
 
         if (intersect.object.name === "board") {
-            const highlightPos = new THREE.Vector3().copy(intersect.point).floor();
+            const highlightPos = new THREE.Vector3().copy(intersect.point).floor().addScalar(0.5);
             highlight.position.set(highlightPos.x, 0.001, highlightPos.z );
 
             const objectExists = objects.find(function (object) {

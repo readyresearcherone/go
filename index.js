@@ -1,7 +1,7 @@
 
-        import * as THREE from '/three.js-master/build/three.module.js';
-        import {OrbitControls} from '/three.js-master/examples/jsm/controls/OrbitControls.js';
-        const renderer = new THREE.WebGLRenderer();
+import * as THREE from '/three.js-master/build/three.module.js';
+import { OrbitControls } from '/three.js-master/examples/jsm/controls/OrbitControls.js';
+const renderer = new THREE.WebGLRenderer();
 renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
 
@@ -14,8 +14,8 @@ camera.position.set(10, 15, -22);
 
 orbit.update();
 
-const goBoard = new THREE.Mesh (
-    new THREE.PlaneGeometry(19,19),
+const goBoard = new THREE.Mesh(
+    new THREE.PlaneGeometry(19, 19),
     new THREE.MeshBasicMaterial({
         color: 0xffffff,
         side: THREE.DoubleSide,
@@ -25,13 +25,14 @@ const goBoard = new THREE.Mesh (
 
 goBoard.rotateX(Math.PI / 2);
 scene.add(goBoard);
+goBoard.name='board'
 
-const highlight = new THREE.Mesh (
-    new THREE.PlaneGeometry(1,1),
+const highlight = new THREE.Mesh(
+    new THREE.PlaneGeometry(1, 1),
     new THREE.MeshBasicMaterial({
         color: 0xffffff,
         side: THREE.DoubleSide,
-        
+
     })
 )
 
@@ -43,6 +44,27 @@ scene.add(highlight);
 const grid = new THREE.GridHelper(19, 19)
 scene.add(grid);
 
+
+const mousePosition = new THREE.Vector2();
+const raycaster = new THREE.Raycaster();
+let intersects;
+
+window.addEventListener('mousemove', function (e) {
+    mousePosition.x = (e.clientX / window.innerWidth) * 2 - 1;
+    mousePosition.y = -(e.clientY / window.innerHeight) * 2 + 1;
+    raycaster.setFromCamera(mousePosition, camera);
+    intersects = raycaster.intersectObjects(scene.children);
+    intersects.forEach(function (intersect) {
+
+        if (intersect.object.name === "board") {
+            const highlightPos = new THREE.Vector3().copy(intersect.point).floor();
+            highlight.position.set(highlightPos.x, 0, highlightPos.z);
+
+        }
+
+
+    });
+});
 
 
 
@@ -57,5 +79,5 @@ window.addEventListener('resize', () => {
     camera.updateProjectionMatrix();
     renderer.setSize(window.innerWidth, window.innerHeight);
 });
-      
+
 

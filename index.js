@@ -15,24 +15,27 @@ camera.position.set(10, 15, -22);
 orbit.update();
 
 const goBoard = new THREE.Mesh(
-    new THREE.PlaneGeometry(19, 19),
+    new THREE.PlaneGeometry(20, 20),
     new THREE.MeshBasicMaterial({
-        color: 0xffffff,
+        color: 0xaf6c26,
         side: THREE.DoubleSide,
-        visible: false
+        transparent: true,
+        opacity: 0.5
+
     })
 )
 
 goBoard.rotateX(Math.PI / 2);
 scene.add(goBoard);
-goBoard.name='board'
+goBoard.name = 'board'
 
 const highlight = new THREE.Mesh(
-    new THREE.PlaneGeometry(1, 1),
+    new THREE.PlaneGeometry(0.5, 0.5),
     new THREE.MeshBasicMaterial({
         color: 0xffffff,
         side: THREE.DoubleSide,
-
+        transparent: true,
+        opacity: 0.8
     })
 )
 
@@ -41,7 +44,7 @@ scene.add(highlight);
 
 
 
-const grid = new THREE.GridHelper(20,20)
+const grid = new THREE.GridHelper(20, 20)
 scene.add(grid);
 
 
@@ -57,19 +60,19 @@ window.addEventListener('mousemove', function (e) {
     intersects.forEach(function (intersect) {
 
         if (intersect.object.name === "board") {
-            const highlightPos = new THREE.Vector3().copy(intersect.point).floor().addScalar(0.5);
-            highlight.position.set(highlightPos.x, 0, highlightPos.z);
+            const highlightPos = new THREE.Vector3().copy(intersect.point).floor();
+            highlight.position.set(highlightPos.x, 0.001, highlightPos.z );
 
-            const objectExists = objects.find(function(object) {
-                return(object.position.x === highlight.position.x) && 
-                (object.position.z === highlight.position.z)
-        
+            const objectExists = objects.find(function (object) {
+                return (object.position.x === highlight.position.x ) &&
+                    (object.position.z === highlight.position.z )
+
             });
 
-            if(!objectExists)
-            highlight.material.color.setHex(0xFFFFFF);
+            if (!objectExists)
+                highlight.material.color.setHex(0xFFFFFF);
             else
-            highlight.material.color.setHex(0xFF0000);
+                highlight.material.color.setHex(0xFF0000);
 
         }
 
@@ -77,7 +80,7 @@ window.addEventListener('mousemove', function (e) {
     });
 });
 
-const goPiece = new THREE.Mesh( 
+const goPiece = new THREE.Mesh(
     new THREE.SphereGeometry(0.3, 10, 10),
     new THREE.MeshBasicMaterial({
         color: 0xFFFFFF
@@ -86,7 +89,7 @@ const goPiece = new THREE.Mesh(
 );
 
 
-const goPieceB = new THREE.Mesh( 
+const goPieceB = new THREE.Mesh(
     new THREE.SphereGeometry(0.3, 10, 10),
     new THREE.MeshBasicMaterial({
         color: 0x000000
@@ -96,34 +99,44 @@ const goPieceB = new THREE.Mesh(
 
 
 
-const objects =[];
-const player = 0;
+const objects = [];
+let player = 0;
 
-window.addEventListener('mousedown', function() {
+window.addEventListener('mousedown', function () {
 
-    
+    player = player + 1;
 
-    const objectExists = objects.find(function(object) {
-        return(object.position.x === highlight.position.x) && 
-        (object.position.z === highlight.position.z)
+
+    const objectExists = objects.find(function (object) {
+        return (object.position.x === highlight.position.x) &&
+            (object.position.z === highlight.position.z)
 
     });
 
     if (!objectExists) {
 
-    intersects.forEach(function (intersect) {
+        intersects.forEach(function (intersect) {
 
-        if (intersect.object.name === "board") {
-            const goPieceCopy = goPiece.clone();
-            goPieceCopy.position.copy(highlight.position);
-            scene.add(goPieceCopy);
-            objects.push(goPieceCopy);
-            highlight.material.color.setHex(0xFF0000);
-        }
+            if (intersect.object.name === "board") {
+                const goPieceWhite = goPiece.clone();
+                const goPieceBlack = goPieceB.clone();
+
+                if (player % 2 === 0) {
+                    goPieceWhite.position.copy(highlight.position);
+                    scene.add(goPieceWhite);
+                    objects.push(goPieceWhite);
+                } else {
+                    goPieceBlack.position.copy(highlight.position);
+                    scene.add(goPieceBlack);
+                    objects.push(goPieceBlack);
+                }
+
+                highlight.material.color.setHex(0xFF0000);
+            }
 
 
-    });
-}
+        });
+    }
 });
 
 

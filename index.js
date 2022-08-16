@@ -1,17 +1,34 @@
 
 import * as THREE from '/three.js-master/build/three.module.js';
 import { OrbitControls } from '/three.js-master/examples/jsm/controls/OrbitControls.js';
+import {GLTFLoader} from '/three.js-master/examples/jsm/loaders/GLTFLoader.js';
+
 const renderer = new THREE.WebGLRenderer();
 renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
 
 const scene = new THREE.Scene();
 
+
+    const gltfLoader = new GLTFLoader();
+    const url = 'board.glb';
+    gltfLoader.load(url, (gltf) => {
+      const root = gltf.scene;
+      scene.add(root);
+      root.position.y = -1.3;
+      root.scale.set(1.1, 1.1, 1.1);
+      
+    });
+
 const camera = new THREE.PerspectiveCamera(55, window.innerWidth / window.innerHeight, 0.1, 1000);
 
 const orbit = new OrbitControls(camera, renderer.domElement);
-orbit.enableZoom = false;
-orbit.maxPolarAngle = Math.PI / 2.3;
+orbit.enableZoom = true;
+orbit.minDistance = 30;
+orbit.maxDistance = 40;
+orbit.enablePan = false;
+orbit.maxPolarAngle = Math.PI/2.3;
+
 camera.position.set(10, 15, -22);
 
 orbit.update();
@@ -29,12 +46,12 @@ const goBoard = new THREE.Mesh(
 )
 
 goBoard.rotateX(Math.PI / 2);
-goBoard.position.set(0, 0, 0)
+goBoard.position.set(0, -0.2, 0)
 scene.add(goBoard);
 goBoard.name = 'board'
 
 const highlight = new THREE.Mesh(
-    new THREE.PlaneGeometry(0.5, 0.5),
+    new THREE.CircleGeometry(0.5, 10),
     new THREE.MeshBasicMaterial({
         color: 0xffffff,
         side: THREE.DoubleSide,
@@ -46,9 +63,14 @@ const highlight = new THREE.Mesh(
 highlight.rotateX(Math.PI / 2);
 scene.add(highlight);
 
+const light = new THREE.AmbientLight()
+scene.add(light);
 
+const light2 = new THREE.PointLight();
+scene.add(light2);
+light2.position.y = 16;
 
-const grid = new THREE.GridHelper(19, 19)
+const grid = new THREE.GridHelper(19, 19);
 scene.add(grid);
 
 

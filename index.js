@@ -1,7 +1,7 @@
 
 import * as THREE from '/three.js-master/build/three.module.js';
 import { OrbitControls } from '/three.js-master/examples/jsm/controls/OrbitControls.js';
-import {GLTFLoader} from '/three.js-master/examples/jsm/loaders/GLTFLoader.js';
+import { GLTFLoader } from '/three.js-master/examples/jsm/loaders/GLTFLoader.js';
 
 const renderer = new THREE.WebGLRenderer();
 renderer.setSize(window.innerWidth, window.innerHeight);
@@ -10,16 +10,16 @@ document.body.appendChild(renderer.domElement);
 const scene = new THREE.Scene();
 
 
-    const gltfLoader = new GLTFLoader();
-    const url = 'board.glb';
-    gltfLoader.load(url, (gltf) => {
-      const root = gltf.scene;
-      scene.add(root);
-      root.position.y = -1.3;
-      root.scale.set(1.1, 1.1, 1.1);
-  
-    
-    });
+const gltfLoader = new GLTFLoader();
+const url = 'board.glb';
+gltfLoader.load(url, (gltf) => {
+    const root = gltf.scene;
+    scene.add(root);
+    root.position.y = -1.3;
+    root.scale.set(1.1, 1.1, 1.1);
+
+
+});
 
 const camera = new THREE.PerspectiveCamera(55, window.innerWidth / window.innerHeight, 0.1, 1000);
 
@@ -28,7 +28,7 @@ orbit.enableZoom = true;
 orbit.minDistance = 30;
 orbit.maxDistance = 40;
 orbit.enablePan = false;
-orbit.maxPolarAngle = Math.PI/2.3;
+orbit.maxPolarAngle = Math.PI / 2.3;
 
 camera.position.set(10, 15, -22);
 
@@ -43,7 +43,7 @@ const goBoard = new THREE.Mesh(
         opacity: 0.0
 
     }),
-    
+
 )
 
 goBoard.rotateX(Math.PI / 2);
@@ -60,7 +60,7 @@ const highlight = new THREE.Mesh(
         opacity: 0.8
     })
 )
-highlight.name='board';
+highlight.name = 'board';
 
 highlight.rotateX(Math.PI / 2);
 scene.add(highlight);
@@ -88,13 +88,13 @@ window.addEventListener('mousemove', function (e) {
     intersects.forEach(function (intersect) {
 
         if (intersect.object.name === "board") {
-            
+
             const highlightPos = new THREE.Vector3().copy(intersect.point).floor().addScalar(0.5);
-            highlight.position.set(highlightPos.x, 0.001, highlightPos.z );
+            highlight.position.set(highlightPos.x, 0.001, highlightPos.z);
             console.log('board');
             const objectExists = objects.find(function (object) {
-                return (object.position.x === highlight.position.x ) &&
-                    (object.position.z === highlight.position.z )
+                return (object.position.x === highlight.position.x) &&
+                    (object.position.z === highlight.position.z)
 
             });
 
@@ -103,7 +103,7 @@ window.addEventListener('mousemove', function (e) {
             else
                 highlight.material.color.setHex(0xFF0000);
 
-        } 
+        }
 
 
     });

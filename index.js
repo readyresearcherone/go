@@ -17,7 +17,8 @@ const scene = new THREE.Scene();
       scene.add(root);
       root.position.y = -1.3;
       root.scale.set(1.1, 1.1, 1.1);
-      
+  
+    
     });
 
 const camera = new THREE.PerspectiveCamera(55, window.innerWidth / window.innerHeight, 0.1, 1000);
@@ -39,14 +40,14 @@ const goBoard = new THREE.Mesh(
         color: 0xaf6c26,
         side: THREE.DoubleSide,
         transparent: true,
-        opacity: 0.5
+        opacity: 0.0
 
     }),
     
 )
 
 goBoard.rotateX(Math.PI / 2);
-goBoard.position.set(0, -0.2, 0)
+goBoard.position.set(0, 0, 0)
 scene.add(goBoard);
 goBoard.name = 'board'
 
@@ -59,6 +60,7 @@ const highlight = new THREE.Mesh(
         opacity: 0.8
     })
 )
+highlight.name='board';
 
 highlight.rotateX(Math.PI / 2);
 scene.add(highlight);
@@ -86,9 +88,10 @@ window.addEventListener('mousemove', function (e) {
     intersects.forEach(function (intersect) {
 
         if (intersect.object.name === "board") {
+            
             const highlightPos = new THREE.Vector3().copy(intersect.point).floor().addScalar(0.5);
             highlight.position.set(highlightPos.x, 0.001, highlightPos.z );
-
+            console.log('board');
             const objectExists = objects.find(function (object) {
                 return (object.position.x === highlight.position.x ) &&
                     (object.position.z === highlight.position.z )
@@ -100,7 +103,7 @@ window.addEventListener('mousemove', function (e) {
             else
                 highlight.material.color.setHex(0xFF0000);
 
-        }
+        } 
 
 
     });

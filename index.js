@@ -91,7 +91,7 @@ window.addEventListener('mousemove', function (e) {
 
             const highlightPos = new THREE.Vector3().copy(intersect.point).floor().addScalar(0.5);
             highlight.position.set(highlightPos.x, 0.001, highlightPos.z);
-            console.log('board');
+           
             const objectExists = objects.find(function (object) {
                 return (object.position.x === highlight.position.x) &&
                     (object.position.z === highlight.position.z)
@@ -133,7 +133,7 @@ let player = 0;
 
 window.addEventListener('mousedown', function () {
 
-    player = player + 1;
+ 
 
 
     const objectExists = objects.find(function (object) {
@@ -143,17 +143,19 @@ window.addEventListener('mousedown', function () {
     });
 
     if (!objectExists) {
-
+        player = player + 1;
         intersects.forEach(function (intersect) {
-
+           
             if (intersect.object.name === "board") {
                 const goPieceWhite = goPiece.clone();
                 const goPieceBlack = goPieceB.clone();
+                
 
                 if (player % 2 === 0) {
                     goPieceWhite.position.copy(highlight.position);
                     scene.add(goPieceWhite);
                     objects.push(goPieceWhite);
+                    
                 } else {
                     goPieceBlack.position.copy(highlight.position);
                     scene.add(goPieceBlack);
